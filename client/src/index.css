@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================
+   Design tokens — RGB triplets so Tailwind alpha modifiers work.
+   Light mode = warm off-white paper feel.
+   Dark mode = near-black with warm undertone.
+   ========================================================== */
+:root {
+  --canvas: 248 247 244;
+  --surface: 255 255 255;
+  --raised: 255 255 255;
+  --line: 231 229 224;
+  --text: 23 23 23;
+  --text-muted: 107 107 107;
+  --brand: 79 70 229;
+  --brand-hover: 67 56 202;
+  --success: 5 150 105;
+  --warn: 217 119 6;
+  --danger: 220 38 38;
+}
+
+.dark {
+  --canvas: 15 15 16;
+  --surface: 24 24 27;
+  --raised: 31 31 35;
+  --line: 42 42 46;
+  --text: 244 244 245;
+  --text-muted: 161 161 170;
+  --brand: 129 140 248;
+  --brand-hover: 165 180 252;
+  --success: 16 185 129;
+  --warn: 245 158 11;
+  --danger: 248 113 113;
+}
+
+/* Base */
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  @apply bg-canvas text-ink font-sans antialiased;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  /* Subtle warm gradient overlay — barely visible, adds depth to light mode */
+  background-image:
+    radial-gradient(1200px 600px at 100% -10%, rgb(var(--brand) / 0.04), transparent 60%),
+    radial-gradient(800px 400px at -10% 100%, rgb(var(--success) / 0.03), transparent 60%);
+  background-attachment: fixed;
+}
+
+.dark body {
+  background-image:
+    radial-gradient(1200px 600px at 100% -10%, rgb(var(--brand) / 0.08), transparent 60%),
+    radial-gradient(800px 400px at -10% 100%, rgb(129 140 248 / 0.04), transparent 60%);
+}
+
+/* Scrollbar polish */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--line));
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--text-muted) / 0.5); background-clip: content-box; }
+
+/* Reusable primitives */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium
+           transition-colors duration-150 focus:outline-none focus-visible:ring-2
+           focus-visible:ring-brand/40 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-brand text-white hover:bg-brand-hover;
+  }
+  .btn-secondary {
+    @apply btn bg-surface text-ink border border-line hover:bg-canvas;
+  }
+  .btn-ghost {
+    @apply btn text-muted hover:text-ink hover:bg-canvas;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-ink
+           placeholder:text-muted/70 focus:outline-none focus:border-brand
+           focus:ring-2 focus:ring-brand/20 transition-colors;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-ink mb-1.5;
+  }
+
+  .card {
+    @apply bg-surface border border-line rounded-xl shadow-card;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-xs font-medium;
+  }
+}
+
+/* Nice focus ring for keyboard users only */
+:focus:not(:focus-visible) { outline: none; }
+
+/* Radix animation helpers (minimal subset — no tailwindcss-animate needed) */
+@layer utilities {
+  .animate-in { animation: rx-in 150ms ease-out both; }
+  .fade-in-0 { --tw-enter-opacity: 0; }
+  .zoom-in-95 { --tw-enter-scale: 0.97; }
+}
+@keyframes rx-in {
+  from { opacity: var(--tw-enter-opacity, 1); transform: scale(var(--tw-enter-scale, 1)); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Chrome autofill polish — otherwise it slams a yellow/dark background onto inputs */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: rgb(var(--text)) !important;
+  -webkit-box-shadow: 0 0 0 30px rgb(var(--surface)) inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: rgb(var(--text));
+}

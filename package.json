@@ -1,0 +1,15 @@
+{
+  "name": "memsphere",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-Powered Personal Memory Assistant with Adaptive Forgetting and Context-Aware Retrieval",
+  "scripts": {
+    "dev": "concurrently -n client,server -c blue,magenta \"npm --prefix client run dev\" \"npm --prefix server run dev\"",
+    "install:all": "npm install && npm --prefix client install && npm --prefix server install",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server run start"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
